@@ -2,10 +2,7 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
-  Delete,
   UploadedFile,
   UseInterceptors,
   BadRequestException,
@@ -46,22 +43,15 @@ export class FilesController {
     }),
   )
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log( ' entró por aqui')
     if (!file)
       throw new BadRequestException('Make sure that the file is an image');
     // const secureUrl = `${this.configService.get('HOST_API')}/files/product/${file.filename}`;
     // return { secureUrl };
 
-    try{
+    try {
       const secureUrl = await this.filesService.uploadImage(file);
-  
-
-    }catch(err){
-      console.error({ err })
+    } catch (err) {
       throw new BadRequestException('Invalid file type. AQUI');
     }
-
-
-
   }
 }

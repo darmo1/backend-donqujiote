@@ -17,29 +17,35 @@ export class PropertiesService {
 
   async create(
     createPropertyDto: CreatePropertyDto,
-    images: Express.Multer.File,
+    images: Array<Express.Multer.File> = [],
   ) {
     try {
-      const { secure_url } = await this.fileService.uploadImage(images);
+      const uploadedImages = await Promise.all(
+        images.map(async (img) => {
+          const { secure_url } = await this.fileService.uploadImage(img);
+          return secure_url;
+        }),
+      );
+
       await this.propertyRepository.save({
         ...createPropertyDto,
-        images: [secure_url]
-      })      
+        images: uploadedImages,
+      });
       return {
-        ok: true
-      }
-   
+        ok: true,
+      };
     } catch (err) {
       console.error({ err });
       return {
-        ok: false
-      }
+        ok: false,
+      };
     }
   }
 
-  async findAllProperties(){
-    const properties = await this.propertyRepository.findBy({ available: true});
-    console.log( { properties }, '😀😀😀😀')
-    return properties
+  async findAllProperties() {
+    const properties = await this.propertyRepository.findBy({
+      available: true,
+    });
+    return properties;
   }
 }

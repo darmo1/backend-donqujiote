@@ -28,7 +28,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     //   imports:[],
     //   inject: [],
     //   useFactory: () => {
-    //     console.log('JWT', process.env.JWT_SECRET)
     //     return {
     //       secret: process.env.JWT_SECRET,
     //       signOptions: {

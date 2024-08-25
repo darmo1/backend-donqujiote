@@ -1,20 +1,29 @@
-import { Controller, Post, Body, UseInterceptors, UploadedFile, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseInterceptors, UploadedFile, Get, UploadedFiles } from '@nestjs/common';
 import { PropertiesService } from './properties.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('properties')
 export class PropertiesController {
   constructor(private readonly propertiesService: PropertiesService) {}
 
   @Post('create')
-  @UseInterceptors(FileInterceptor('images'))
+  @UseInterceptors(FilesInterceptor('images'))
   async create(
-    @UploadedFile() images: Express.Multer.File,
+    @UploadedFiles() images: Array<Express.Multer.File>,
     @Body() createPropertyDto: CreatePropertyDto,
   ) {
     return this.propertiesService.create(createPropertyDto, images);
   }
+
+  // @Post('create')
+  // @UseInterceptors(FileInterceptor('images'))
+  // async create(
+  //   @UploadedFile() images: Express.Multer.File,
+  //   @Body() createPropertyDto: CreatePropertyDto,
+  // ) {
+  //   return this.propertiesService.create(createPropertyDto, images);
+  // }
 
   @Get()
   async findAll(){
