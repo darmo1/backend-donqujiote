@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Property } from './entities/property.entity';
 import { Repository } from 'typeorm';
 import { FilesService } from 'src/files/files.service';
+import { SearchPropertyDto } from './dto/search-property.dto';
 
 @Injectable()
 export class PropertiesService {
@@ -40,6 +41,22 @@ export class PropertiesService {
         ok: false,
       };
     }
+  }
+
+  async searchProperty(values: SearchPropertyDto): Promise<Property[]> {
+    const { city, property, rooms } = values;
+    const query = this.propertyRepository.createQueryBuilder('property');
+    query.where('LOWER(property.municipality) = LOWER(:city)', { city });
+
+    if (property) {
+      query.andWhere('LOWER(property.type) = LOWER(:property)', { property });
+    }
+
+    if (rooms) {
+      query.andWhere('property.rooms = :rooms', { rooms });
+    }
+    const results = await query.getMany();
+    return results;
   }
 
   async findAllProperties() {

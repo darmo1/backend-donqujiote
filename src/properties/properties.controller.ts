@@ -2,6 +2,7 @@ import { Controller, Post, Body, UseInterceptors, UploadedFile, Get, UploadedFil
 import { PropertiesService } from './properties.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { SearchPropertyDto } from './dto/search-property.dto';
 
 @Controller('properties')
 export class PropertiesController {
@@ -14,6 +15,13 @@ export class PropertiesController {
     @Body() createPropertyDto: CreatePropertyDto,
   ) {
     return this.propertiesService.create(createPropertyDto, images);
+  }
+
+  @Post('search')
+  async searchProperty(
+    @Body() searchProperty: SearchPropertyDto
+  ){
+   return await this.propertiesService.searchProperty(searchProperty)
   }
 
   // @Post('create')
