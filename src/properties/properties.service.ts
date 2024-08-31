@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { Property } from './entities/property.entity';
 import { Repository } from 'typeorm';
 import { FilesService } from 'src/files/files.service';
 import { SearchPropertyDto } from './dto/search-property.dto';
+import { v4 as uuid  } from 'uuid'
 
 @Injectable()
 export class PropertiesService {
@@ -57,6 +58,24 @@ export class PropertiesService {
     }
     const results = await query.getMany();
     return results;
+  }
+
+  async findMenuProperties(){
+    try{
+    const municipalities = await this.propertyRepository
+    .createQueryBuilder('property')
+    .select('DISTINCT(property.municipality)', 'municipality')
+    .getRawMany();
+
+    if(municipalities.length === 0){
+      return []
+    }
+
+    return municipalities.map(item => ({ id: uuid(),  city: item.municipality}));
+    
+    }catch(error){
+      throw new InternalServerErrorException('Error fetching municipalities');
+    }
   }
 
   async findAllProperties() {

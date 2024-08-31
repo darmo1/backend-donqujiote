@@ -24,6 +24,11 @@ export class PropertiesController {
    return await this.propertiesService.searchProperty(searchProperty)
   }
 
+  @Get('menuProperties')
+  async findMenuProperties(){
+   return await this.propertiesService.findMenuProperties()
+  }
+
   // @Post('create')
   // @UseInterceptors(FileInterceptor('images'))
   // async create(
