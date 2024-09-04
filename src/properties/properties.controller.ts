@@ -29,6 +29,32 @@ export class PropertiesController {
    return await this.propertiesService.findMenuProperties()
   }
 
+
+  @Get(':id')
+  async findproperty(
+    @Param('id') id: string,
+    @Query('city') city?: string
+  ){
+    const decodedCity = city ? decodeURIComponent(city) : null;
+    return this.propertiesService.findProperties(id, decodedCity)
+  }
+
+  
+  @Get('/suggestions/:suggestionBy')
+  async findpropertySuggested(
+    @Param('suggestionBy') suggestionBy: string,
+  ){
+console.log({ suggestionBy })
+    return this.propertiesService.findPropertiesSuggestedByCity(suggestionBy)
+  }
+
+  @Get()
+  async findAll(){
+    return this.propertiesService.findAllProperties()
+  }
+
+
+  
   // @Post('create')
   // @UseInterceptors(FileInterceptor('images'))
   // async create(
@@ -37,19 +63,4 @@ export class PropertiesController {
   // ) {
   //   return this.propertiesService.create(createPropertyDto, images);
   // }
-
-  @Get(':id')
-  async findproperty(
-    @Param('id') id: string,
-    @Query('municipality') municipality?: string
-  ){
-    const decodedQuery = decodeURIComponent(municipality);
-    console.log({ municipality, decodedQuery })
-    return this.propertiesService.findProperties(id, decodedQuery)
-  }
-
-  @Get()
-  async findAll(){
-    return this.propertiesService.findAllProperties()
-  }
 }

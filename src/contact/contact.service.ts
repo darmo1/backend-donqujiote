@@ -32,7 +32,6 @@ export class ContactService {
 
       const registerContact = await this.contactRegistration.create(contactRegistration);
       const response = await this.contactRegistration.save(registerContact);
-      console.log( { response })
       return {
         ok: true,
       };
