@@ -78,6 +78,34 @@ export class PropertiesService {
     }
   }
 
+  async findProperties(id: string, municipality?: string) {
+    console.log('ENTRE')
+    try{
+      const property = await this.propertyRepository.findBy({
+        available: true,
+        id
+      });
+      let sugesstedProperties = [];
+
+      if( municipality ){ 
+        const query = this.propertyRepository.createQueryBuilder('property');
+        query.where('LOWER(property.municipality) = LOWER(:municipality)', { municipality });
+        query.andWhere('property.available = :available', { available: true });
+        const properties = await query.getMany();
+        sugesstedProperties = properties.filter( item => item.id !== id )
+      }
+      console.log({ property, sugesstedProperties })
+      return {
+        property,
+        sugesstedProperties 
+      };
+    }catch(error){
+      throw new InternalServerErrorException('Error fetching get Property');
+
+    }
+   
+  }
+
   async findAllProperties() {
     const properties = await this.propertyRepository.findBy({
       available: true,

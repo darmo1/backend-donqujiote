@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PropertiesModule } from './properties/properties.module';
 import { FilesModule } from './files/files.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FilesModule } from './files/files.module';
     AuthModule,
     PropertiesModule,
     FilesModule,
+    ContactModule,
   ],
   controllers: [AppController],
   providers: [AppService],

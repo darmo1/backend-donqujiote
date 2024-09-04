@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseInterceptors, UploadedFile, Get, UploadedFiles } from '@nestjs/common';
+import { Controller, Post, Body, UseInterceptors, UploadedFile, Get, UploadedFiles, Param, Query } from '@nestjs/common';
 import { PropertiesService } from './properties.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -37,6 +37,16 @@ export class PropertiesController {
   // ) {
   //   return this.propertiesService.create(createPropertyDto, images);
   // }
+
+  @Get(':id')
+  async findproperty(
+    @Param('id') id: string,
+    @Query('municipality') municipality?: string
+  ){
+    const decodedQuery = decodeURIComponent(municipality);
+    console.log({ municipality, decodedQuery })
+    return this.propertiesService.findProperties(id, decodedQuery)
+  }
 
   @Get()
   async findAll(){
